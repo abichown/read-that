@@ -10,8 +10,17 @@ type TestTableRow = {
 
 export const loader = async (): Promise<TestTableRow[]> => {
   console.log('Loader function called');
-  const { data, error } = await supabase.from('test-table').select('*');
+  const user = supabase.auth.getUser();
 
+  user.then(({ data: { user } }) => {
+    if (user) {
+      console.log('Your user ID is:', user.id);
+    } else {
+      console.log('No user logged in');
+    }
+  });
+
+  const { data, error } = await supabase.from('test-table').select('*');
   console.log('Data:', data);
   console.log('Error:', error);
 
